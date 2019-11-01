@@ -6,7 +6,8 @@
 #include<unistd.h>
 #include<stdlib.h>
 
-#define BUFSIZE 1024
+//#define BUFSIZE 1024
+#define BUFSIZE 5
 
 void error_handling(char* message);
 
@@ -44,10 +45,15 @@ int main(int argc, char **argv){
 	clnt_sock=accept(serv_sock, (struct sockaddr*) &clnt_addr, &clnt_addr_size);
 	if(clnt_sock == -1)
 		error_handling("accecpt() error");
+	sleep(5);
 
 	/*데이터 수신 및 전송*/
-	while((str_len=read(clnt_sock, message, BUFSIZE)) != 0){
-		write(clnt_sock, message, str_len);
+	//while((str_len=read(clnt_sock, message, BUFSIZE)) != 0){
+	while((str_len=recv(clnt_sock, message, BUFSIZE, 0)) != 0){
+		//write(clnt_sock, message, str_len);
+		//recv(clnt_sock, message, str_len);
+		//printf("%s >> %d\n", message, str_len);
+		//printf(">> %d >> %d\n", strlen(message), str_len);
 		write(1, message, str_len);
 	}
 
