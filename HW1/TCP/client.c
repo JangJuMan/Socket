@@ -1,4 +1,11 @@
 #include<stdio.h>
+#include<sys/types.h>
+#include<sys/socket.h>
+#include<arpa/inet.h>
+#include<string.h>
+#include<unistd.h>
+#include<stdlib.h>
+
 #define BUFSIZE 1024
 
 void error_handling(char* message);
@@ -41,7 +48,7 @@ int main(int argc, char** argv){
 		printf("서버로부터 전송된 메시지 : %s\n", message);
 	}
 
-	close(sock)
+	close(sock);
 	return 0;
 }
 
