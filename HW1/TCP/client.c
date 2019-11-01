@@ -9,6 +9,7 @@
 #define BUFSIZE 1024
 
 void error_handling(char* message);
+char data[3][10] = {"Connection", "establishm", "ent_isDone"};
 
 int main(int argc, char** argv){
 	int sock;
@@ -32,6 +33,15 @@ int main(int argc, char** argv){
 	
 	if(connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1)
 		error_handling("connect() error!");
+	
+	send(sock, "Connection", sizeof("Connection"), 0);
+	send(sock, "_Establish", sizeof("_Establish"), 0);
+	send(sock, "ment__DONE", sizeof("ment__DONE"), 0);
+	//write(sock, "hihihi", 6);
+	//write(sock, "hihih2", 6);
+	//write(sock, "hihih3", 6);
+	//write(sock, data[1], strlen(data[1]));
+	//write(sock, data[2], strlen(data[2]));
 
 	while(1){
 		/*메시지 입력, 전송*/
@@ -40,12 +50,14 @@ int main(int argc, char** argv){
 
 		if(!strcmp(message, "q\n"))
 			break;
-		write(sock, message, strlen(message));
+		//write(sock, message, strlen(message));
+		send(sock, message, strlen(message), 0);
 
 		/*메시지 수신, 출력*/
-		str_len = read(sock, message, BUFSIZE-1);
-		message[str_len] = 0;
-		printf("서버로부터 전송된 메시지 : %s\n", message);
+		//str_len = read(sock, message, BUFSIZE-1);
+		//message[str_len] = 0;
+		//printf("서버로부터 전송된 메시지 : %s\n", message);
+		//break;
 	}
 
 	close(sock);
