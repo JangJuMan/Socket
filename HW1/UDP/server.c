@@ -51,17 +51,13 @@ int main(int argc, char **argv){
 		clnt_addr_size = sizeof(clnt_addr);
 		str_len = recvfrom(serv_sock, message, buf_size, 0,
 				(struct sockaddr*)&clnt_addr, &clnt_addr_size);
-		if(str_len == -1){
-			printf("[Timeout] process done\n", stderr);
-			break;
-		}
-
+		
 		if(message[0] == 'q' && str_len == 1){
-			printf("[client terminated!] process done\n", stderr);
+			printf("\n[client terminated!] process done\n", stderr);
 			break;
 		}
-
 		write(1, message, str_len);
+		
 	}
 
 	return 0;
