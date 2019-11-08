@@ -34,9 +34,6 @@ int main(int argc, char** argv){
 	serv_addr.sin_port = htons(atoi(argv[2]));
 
 	connect(sock, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
-//	sendto(sock, "Connection\n", sizeof("Connection\n"), 0);
-  //  sendto(sock, "_Establish\n", sizeof("_Establish\n"), 0);
-//    sendto(sock, "ment__DONE\n", sizeof("ment__DONE\n"), 0);
 	sendto(sock, "Connection\n", sizeof("Connection\n"), 0,  
                     (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 	sendto(sock, "_Establish\n", sizeof("_Establish\n"), 0,        
@@ -48,19 +45,14 @@ int main(int argc, char** argv){
 		fputs("전송할 메시지를 입력하세요 (q to quit) : ", stdout);
 		fgets(message, sizeof(message), stdin);
 		if(!strcmp(message, "q\n")){
-//			write(sock, "q", strlen("q"));
+			write(sock, "q", strlen("q"));
 			sendto(sock, message, strlen(message), 0,
 					(struct sockaddr*)&serv_addr, sizeof(serv_addr));
 			break;
 		}
 		sendto(sock, message, strlen(message), 0, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 	}
-	while(write(sock, "q", strlen("q")) != -1){
-	//		sendto(sock, "q", strlen("q"), 0,
-      //              (struct sockaddr*)&serv_addr, sizeof(serv_addr)) != -1){
-	//	printf("1\n");
-	}
-
+	while(write(sock, "q", strlen("q")) != -1);
 
 	close(sock);
 	return 0;
