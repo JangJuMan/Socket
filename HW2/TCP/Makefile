@@ -9,4 +9,4 @@ client:
 	gcc client.c -o client
 
 clean: 
-	rm -f server client filename.bin
+	rm -f server client
