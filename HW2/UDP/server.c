@@ -11,32 +11,22 @@ void error_handling(char* message);
 
 int main(int argc, char **argv){
 	int serv_sock;
-	char check[10];
-	char reACK[] = "reACK";
-	char okACK[] = "okACK";
-	int str_len, num = 0;
+	int buf_size = 2048, clnt_addr_size, recv_offset, check = 0;
 
 	struct sockaddr_in serv_addr;
 	struct sockaddr_in clnt_addr;
-	struct timeval optVal = {10, 0};
 
-	int optLen = sizeof(optVal);
-	int clnt_addr_size;
-	int cnt = 0;
+	char* file_name;
+	char message[buf_size];
 
-	if(argc!=3){
-		printf("Usage : %s <port> <buffer size>\n", argv[0]);
+	if(argc!=2){
+		printf("Usage : %s <port>\n", argv[0]);
 		exit(1);
 	}
-	int buf_size = atoi(argv[2]);
-	char message[buf_size];
 
 	serv_sock=socket(PF_INET, SOCK_DGRAM, 0);
 	if(serv_sock == -1)
 		error_handling("UDP socket 생성 error");
-
-	//set timeout
-	setsockopt(serv_sock, SOL_SOCKET, SO_RCVTIMEO, &optVal, optLen);
 
 	memset(&serv_addr, 0, sizeof(serv_addr));
 	serv_addr.sin_family=AF_INET;
@@ -45,22 +35,41 @@ int main(int argc, char **argv){
 
 	if(bind(serv_sock, (struct sockaddr*) &serv_addr, sizeof(serv_addr)) == -1)
 		error_handling("bind() error");
-	int check_len;
-	sleep(5);
+
+
+	clnt_addr_size = sizeof(clnt_addr);
+	printf("[ downloading file... ]\n");
+	recv_offset = recvfrom(serv_sock, message, buf_size, 0,
+            (struct sockaddr*)&clnt_addr, &clnt_addr_size);
+
+	file_name = malloc(sizeof(char) * (strlen(message)));
+	strcpy(file_name, message);
+	memset(message, 0, sizeof(message));
+
+	sendto(serv_sock, "YES", strlen("YES"), 0,
+	    (struct sockaddr*)&clnt_addr, sizeof(clnt_addr));
+
+	FILE* fp = fopen(file_name, "wb");
+
 	while(1){
-		clnt_addr_size = sizeof(clnt_addr);
-		str_len = recvfrom(serv_sock, message, buf_size, 0,
+		memset(message, 0, sizeof(message));
+		recv_offset = recvfrom(serv_sock, message, buf_size, 0,
 				(struct sockaddr*)&clnt_addr, &clnt_addr_size);
 		
-		if(message[0] == 'q' && str_len == 1){
-			printf("\n[client terminated!] process done\n", stderr);
-			break;
+		if(!strcmp(file_name, message) && check == 0){
+			sendto(serv_sock, "YES", strlen("YES"), 0,
+                (struct sockaddr*)&clnt_addr, sizeof(clnt_addr));
 		}
-		write(1, message, str_len);
-		
+		else{
+			check = 1;
+			fprintf(fp, "%s", message);
+		}
 	}
-
+	printf("\n\n[ downloading done..! ]\n");
+	fclose(fp);
 	return 0;
+
+
 }
 
 void error_handling(char* message){
