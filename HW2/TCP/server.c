@@ -11,7 +11,7 @@ void error_handling(char* message);
 int main(int argc, char **argv){
 	int serv_sock, clnt_sock, clnt_addr_size;
 	int str_len;
-	int buffer_size = 1024;
+	int buffer_size = 32;
 
 	char message[buffer_size];
 	char* ptr;
