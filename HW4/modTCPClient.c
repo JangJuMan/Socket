@@ -14,9 +14,10 @@ int main(int argc, char** argv){
 	int sock;
 	char send_message[BUFSIZE];
 	char recv_message[BUFSIZE];
-	int str_len;
+	int str_len, i;
 	char op;
-	int start_addr, start_addr_1st, start_addr_2nd, number_of_coils, number_of_coils_1st, number_of_coils_2nd, loop = 1, control_data, control_data_1st, control_data_2nd, bc, send_size;
+	int start_addr, start_addr_1st, start_addr_2nd, number_of_coils, number_of_coils_1st, number_of_coils_2nd;
+	int loop = 1, control_data, control_data_1st, control_data_2nd, bc, send_size;
 	struct sockaddr_in serv_addr;
 
 	if(argc != 2){
@@ -81,7 +82,7 @@ int main(int argc, char** argv){
 			printf("\n\n\t--------< DATA RXed in HEX(read) >--------\n");
 			printf("\t>\t[FC] : 0x%02x  \n\t>\t[BC] : 0x%02x\t\n", recv_message[7], recv_message[8]);
 			printf("\t>\t[DATA] : ");
-			for(int i=9; i<9 + recv_message[8]; i++){
+			for(i=9; i<9 + recv_message[8]; i++){
 				printf("%02x  ", recv_message[i]);
 			}
 			printf("\n\t------------------------------------------\n\n\n");
@@ -109,7 +110,7 @@ int main(int argc, char** argv){
 			send_message[10] = number_of_coils_1st;	// 몇개나 제어할 것인가?
 			send_message[11] = number_of_coils_2nd;	
 			send_message[12] = bc;	//1; 	// ??? 
-			for(int i=13; bc != 0; i++){
+			for(i=13; bc != 0; i++){
 				send_message[i] = control_data%256;	//control_data : 제어할 코일들
 				control_data /= 256;
 				bc--;
@@ -148,7 +149,7 @@ int main(int argc, char** argv){
 			printf("\n\n\t--------< DATA RXed in HEX(READ) >--------\n");
 			printf("\t>\t[FC] : 0x%02x  \n\t>\t[BC] : 0x%02x\t\n", recv_message[7], recv_message[8]);
 			printf("\t>\t[RV] : ");
-			for(int i=9; i<9 + recv_message[8]; i+=2){
+			for(i=9; i<9 + recv_message[8]; i+=2){
 				printf("0x%02x%02x  ", recv_message[i], recv_message[i+1]);
 			}
 			printf("\n\t------------------------------------------\n\n\n");
@@ -178,7 +179,7 @@ int main(int argc, char** argv){
 			send_message[11] = number_of_coils_2nd;	
 			send_message[12] = bc;	
 
-			for(int i=13; i<13+bc; i+=2){
+			for(i=13; i<13+bc; i+=2){
 				send_message[i] = control_data_1st;
 				send_message[i+1] = control_data_2nd;
 				send_size+=2;
@@ -186,7 +187,7 @@ int main(int argc, char** argv){
 			send(sock, send_message, send_size, 0);
 
 			str_len = recv(sock, recv_message, BUFSIZE, 0);
-			for(int i=0; i<str_len; i++){
+			for(i=0; i<str_len; i++){
 				printf(" [%d. %d]\n", i, recv_message[i]);
 			}
 
