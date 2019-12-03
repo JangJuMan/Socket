@@ -98,7 +98,11 @@ int main(int argc, char** argv){
 			number_of_coils = number_of_coils % 65536;
 			number_of_coils_1st = number_of_coils / 256;
 			number_of_coils_2nd = number_of_coils % 256;
-			bc = ceil((float)number_of_coils / 8);
+			// bc = ceil((float)number_of_coils / 8);
+			bc = number_of_coils;
+			if(number_of_coils % 8 > 0){
+				bc++;
+			}
 			send_size = 13;
 			
 
