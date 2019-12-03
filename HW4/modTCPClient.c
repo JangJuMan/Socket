@@ -191,10 +191,10 @@ int main(int argc, char** argv){
 			send(sock, send_message, send_size, 0);
 
 			str_len = recv(sock, recv_message, BUFSIZE, 0);
-			for(i=0; i<str_len; i++){
+/*			for(i=0; i<str_len; i++){
 				printf(" [%d. %d]\n", i, recv_message[i]);
 			}
-
+*/
 			printf("\n\n\t--------< DATA RXed in HEX(WRITE) >--------\n");
 			printf("\t>\t[FC] : 0x%02x  \n\t>\t[SA] : 0x%02x%02x  [QO] : 0x%02x%02x\t\n", recv_message[7], recv_message[8], recv_message[9], recv_message[10], recv_message[11]);
 			printf("\n\t-------------------------------------------\n\n\n");
